@@ -35,3 +35,57 @@ function drawNewcircle(){
 }
 
 circlebutton.addEventListener("click", drawNewcircle);
+
+
+//drawing circle
+//feature analysis
+//What is the user goal? Trying to draw a picture
+//what is the represented model? cursor on the canvas; define cursor; brush select
+//color? or would that be its own system
+//how does it behavior?
+//move our cursor onto canvas, press mouse botton down, move mouse, release mouse button
+//what is the implemented model? create a new line when mouse button down,add to that line when mouse button move
+//how does it interact with other features?
+//color, image for the brush, eraser, upload image
+
+//keep track of when button is held
+let isDrawing = false;
+let lastLine;
+
+
+//user press mouse button
+function drawMouseDown(){
+    isDrawing = true;
+    const pos = stage.getPointerPosition()
+    lastLine = new Konva.Line({
+        stroke: "red",
+        strokeWidth: 5,
+        lineCap: "round",
+        lineJoin: "round",
+        points: [pos.x, pos.y, pos.x, pos.y]
+    });
+    firstlayer.add(lastLine);
+
+}
+stage.on("mousedown", drawMouseDown)
+//user move their mousse
+function drawMouseMove(){
+    console.log(Date.now())
+    //don't run if not drawing
+    if(isDrawing === false){
+        return;
+    }
+    //if isdrawing is ture
+    const pos = stage.getPointerPosition()
+    let newPoints = lastLine.points().concat([pos.x, pos.y]);
+    lastLine.points(newPoints);
+}
+//add function to mousemove event
+stage.on("mousemove", drawMouseMove);
+//user releases mouse button
+function drawMouseUp(){
+    isDrawing = false;
+}
+//add function to mouseup event
+//stage.on("mouseup", drawMouseUp);
+window.addEventListener("mouseup", drawMouseMove);
